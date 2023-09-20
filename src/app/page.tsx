@@ -1,3 +1,5 @@
+"use client"
+import ProductFilters from "@/components/product-filters";
 import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
 import { SYSTEM_ENTRYPOINTS } from "../../node_modules/next/dist/shared/lib/constants";
 import { BreadCrumbs } from "../../tp-kit/components/breadcrumbs";
@@ -11,8 +13,10 @@ import { ProductData } from "../../tp-kit/types";
 export default function Home() {
   const categories = PRODUCTS_CATEGORY_DATA;
 
+
   return (
     <main>
+      <ProductFilters categories={categories}/>
       <SectionContainer background="white" fullWidth>
         <BreadCrumbs items={[
             {
@@ -23,7 +27,7 @@ export default function Home() {
           />
         </SectionContainer>
         
-        {categories.map((categorie: { name: any; products: string | any[]; }) => 
+        {categories.map((categorie: { name: String; products: ProductData[]; }) => 
         <SectionContainer background="white" fullWidth>
           <h1 className="font-bold">{categorie.name} ({categorie.products.length})</h1> 
           <br/> 
