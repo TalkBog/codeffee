@@ -1,5 +1,5 @@
 import { ProductData, ProductsCategoryData } from "../../tp-kit/types";
-import { TextInput, rem,  } from '@mantine/core';
+import { TextInput, rem  } from '@mantine/core';
 import { Checkbox, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { Button } from "../../tp-kit/components/button";
