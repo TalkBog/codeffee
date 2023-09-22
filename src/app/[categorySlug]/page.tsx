@@ -20,11 +20,11 @@ export default function Home({params} : NextPageProps<Props>) {
             <BreadCrumbs items={[
                 {
                 label: 'Accueil',
-                url: '#'
+                url: '/'
                 },
                 {
                     label: params.categorySlug,
-                    url: '#'
+                    url: '/'+ params.categorySlug
                 }
             ]}
             className="font-medium"/>

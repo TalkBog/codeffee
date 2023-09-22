@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+.link{
+    @apply cursor-pointer transition-colors ease-in-out duration-150 text-black hover:text-green active:text-green-800
+}

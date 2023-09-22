@@ -15,7 +15,7 @@ export default function Home() {
         <BreadCrumbs items={[
             {
               label: 'Accueil',
-              url: '#'
+              url: '/'
             }
           ]}
           className="font-medium"/>

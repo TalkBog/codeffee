@@ -11,6 +11,7 @@ import { ProductData, ProductsCategoryData } from "../../tp-kit/types";
 import { filterProducts } from "@/utils/filter-products";
 import { useMemo, useState } from "react";
 import { ProductFiltersResult } from "@/types";
+import Link from "next/link";
 
 type props = {
   categories : ProductsCategoryData[],
@@ -36,9 +37,9 @@ export default function ProductList({categories, showFilters}:props){
         {filter}
         
         <SectionContainer background="coffee" >
-        {filtered.map((categorie: { name: String; products: ProductData[]; }, index : number) => 
+        {filtered.map((categorie: ProductsCategoryData, index : number) => 
           <div key={index}>
-            <h1 className="font-bold">{categorie.name} ({categorie.products.length})</h1> 
+            <h1><Link className="font-bold link" href={"/"+ categorie.slug}>{categorie.name} ({categorie.products.length})</Link></h1>
             <br/> 
             <ProductGridLayout products={categorie.products}>
               {(product: ProductData) => <ProductCardLayout button={<Button fullWidth variant="ghost">Ajouter au panier</Button>} product={product}/>}
