@@ -11,7 +11,7 @@ export function filterProducts(
 
         return categories
     }
-    let categories_search : ProductsCategoryData[] = categories
+    let categories_search : ProductsCategoryData[] = [...categories]
     if(filters.categoriesSlug.length > 0){
         categories_search = categories_search.filter((categorie)=>
             filters?.categoriesSlug.includes(categorie.slug)

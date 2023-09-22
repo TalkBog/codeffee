@@ -27,7 +27,7 @@ export default function ProductFilters({categories, onChange}: Props){
     })}>
         <TextInput id="textInput"
         placeholder="Rechercher une boisson"
-        icon={<MagnifyingGlass/>}
+        icon={<MagnifyingGlass color="green" weight="duotone" size={22} />}
         {...form.getInputProps('search')}
         />
         <Checkbox.Group {...form.getInputProps('categoriesSlug')} className="flex flex-col gap-2 my-5">

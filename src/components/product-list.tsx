@@ -26,7 +26,7 @@ export default function ProductList({categories}:any){
               url: '#'
             }
           ]}
-          />
+          className="font-medium"/>
       </SectionContainer>
 
       <div className="inline-flex flex-row">
@@ -44,6 +44,7 @@ export default function ProductList({categories}:any){
           <ProductGridLayout products={categorie.products}>
             {(product: ProductData) => <ProductCardLayout button={<Button fullWidth variant="ghost">Ajouter au panier</Button>} product={product}/>}
           </ProductGridLayout>
+          <br/>
           </>
           
         )}
