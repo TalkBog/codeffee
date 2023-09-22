@@ -27,6 +27,7 @@ export default function ProductFilters({categories, onChange}: Props){
     })}>
         <TextInput id="textInput"
         placeholder="Rechercher une boisson"
+        icon={<MagnifyingGlass/>}
         {...form.getInputProps('search')}
         />
         <Checkbox.Group {...form.getInputProps('categoriesSlug')} >

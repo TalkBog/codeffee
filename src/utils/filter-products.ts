@@ -6,19 +6,21 @@ export function filterProducts(
 	filters?: ProductFiltersResult
 ) : ProductsCategoryData[] {
     console.log(filters)
+    console.log(categories)
     if(!filters){
+
         return categories
     }
-
+    let categories_search : ProductsCategoryData[] = categories
     if(filters.categoriesSlug.length > 0){
-        categories = categories.filter((categorie)=>
+        categories_search = categories_search.filter((categorie)=>
             filters?.categoriesSlug.includes(categorie.slug)
         ) // on retire les categories non selectionnés
         
     }
     
     if(filters.search.length > 0){
-        categories = categories.filter((categorie) => {
+        categories_search = categories_search.filter((categorie) => {
             categorie.products = categorie.products.filter((product)=> 
             product.name.toLowerCase().includes(filters.search.toLowerCase())
             )
@@ -28,5 +30,5 @@ export function filterProducts(
     }
     
 
-    return categories
+    return categories_search
 };

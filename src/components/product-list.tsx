@@ -18,7 +18,7 @@ export default function ProductList({categories}:any){
     const filtered = useMemo(() => filterProducts(categories, filters), [categories, filters]);
 
     return <>
-        <ProductFilters categories={categories} onChange={setFilters} />
+
         <SectionContainer background="white" fullWidth>
           <BreadCrumbs items={[
               {
@@ -28,7 +28,9 @@ export default function ProductList({categories}:any){
             ]}
             />
           </SectionContainer>
-          
+          <aside>
+          <ProductFilters categories={categories} onChange={setFilters} />
+          </aside>
           {filtered.map((categorie: { name: String; products: ProductData[]; }) => 
           <SectionContainer background="white" fullWidth>
             <h1 className="font-bold">{categorie.name} ({categorie.products.length})</h1> 
@@ -39,5 +41,7 @@ export default function ProductList({categories}:any){
           </SectionContainer>
 
           )}
+          
+          
     </>
 }
