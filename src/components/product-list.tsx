@@ -7,51 +7,46 @@ import { Heading } from "../../tp-kit/components/heading";
 import { ProductCardLayout } from "../../tp-kit/components/products/product-card-layout";
 import { ProductGridLayout } from "../../tp-kit/components/products/product-grid-layout";
 import { SectionContainer } from "../../tp-kit/components/section-container";
-import { ProductData } from "../../tp-kit/types";
+import { ProductData, ProductsCategoryData } from "../../tp-kit/types";
 import { filterProducts } from "@/utils/filter-products";
 import { useMemo, useState } from "react";
 import { ProductFiltersResult } from "@/types";
 
-export default function ProductList({categories}:any){
+type props = {
+  categories : ProductsCategoryData[],
+  showFilters : boolean
+}
+
+export default function ProductList({categories, showFilters}:props){
     const [filters, setFilters] = useState<ProductFiltersResult>();
 
     const filtered = useMemo(() => filterProducts(categories, filters), [categories, filters]);
 
-    return <>
+    let filter = <></>
 
-      <SectionContainer background="coffee" fullWidth>
-        <BreadCrumbs items={[
-            {
-              label: 'Accueil',
-              url: '#'
-            }
-          ]}
-          className="font-medium"/>
-      </SectionContainer>
+    if(showFilters){
+      filter = <SectionContainer background="coffee" className="basis-1/4 mt-12">
+      <ProductFilters categories={categories} onChange={setFilters}/>
+    </SectionContainer>
+    }
 
-      <div className="inline-flex flex-row">
+    return <div className="inline-flex flex-row">
           
-        <SectionContainer background="coffee" className="basis-1/4 mt-12">
-          <ProductFilters categories={categories} onChange={setFilters}/>
-        </SectionContainer>
         
+        {filter}
         
         <SectionContainer background="coffee" >
-        {filtered.map((categorie: { name: String; products: ProductData[]; }) => 
-          <>
-          <h1 className="font-bold">{categorie.name} ({categorie.products.length})</h1> 
-          <br/> 
-          <ProductGridLayout products={categorie.products}>
-            {(product: ProductData) => <ProductCardLayout button={<Button fullWidth variant="ghost">Ajouter au panier</Button>} product={product}/>}
-          </ProductGridLayout>
-          <br/>
-          </>
+        {filtered.map((categorie: { name: String; products: ProductData[]; }, index : number) => 
+          <div key={index}>
+            <h1 className="font-bold">{categorie.name} ({categorie.products.length})</h1> 
+            <br/> 
+            <ProductGridLayout products={categorie.products}>
+              {(product: ProductData) => <ProductCardLayout button={<Button fullWidth variant="ghost">Ajouter au panier</Button>} product={product}/>}
+            </ProductGridLayout>
+            <br/>
+          </div>
           
         )}
         </SectionContainer>
       </div>
-          
-          
-          
-    </>
 }
