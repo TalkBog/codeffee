@@ -8,7 +8,7 @@ export default function Home() {
 
 
   return (
-    <main>
+    <main className="bg-coffee-50">
       <ProductList categories={categories}/>
         
     </main>

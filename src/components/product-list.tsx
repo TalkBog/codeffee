@@ -19,28 +19,37 @@ export default function ProductList({categories}:any){
 
     return <>
 
-        <SectionContainer background="white" fullWidth>
-          <BreadCrumbs items={[
-              {
-                label: 'Accueil',
-                url: '#'
-              }
-            ]}
-            />
-          </SectionContainer>
-          <aside>
-          <ProductFilters categories={categories} onChange={setFilters} />
-          </aside>
-          {filtered.map((categorie: { name: String; products: ProductData[]; }) => 
-          <SectionContainer background="white" fullWidth>
-            <h1 className="font-bold">{categorie.name} ({categorie.products.length})</h1> 
-            <br/> 
-            <ProductGridLayout products={categorie.products}>
-              {(product: ProductData) => <ProductCardLayout button={<Button fullWidth variant="ghost">Ajouter au panier</Button>} product={product}/>}
-            </ProductGridLayout>
-          </SectionContainer>
+      <SectionContainer background="coffee" fullWidth>
+        <BreadCrumbs items={[
+            {
+              label: 'Accueil',
+              url: '#'
+            }
+          ]}
+          />
+      </SectionContainer>
 
-          )}
+      <div className="inline-flex flex-row">
+          
+        <SectionContainer background="coffee" className="basis-1/4 mt-12">
+          <ProductFilters categories={categories} onChange={setFilters}/>
+        </SectionContainer>
+        
+        
+        <SectionContainer background="coffee" >
+        {filtered.map((categorie: { name: String; products: ProductData[]; }) => 
+          <>
+          <h1 className="font-bold">{categorie.name} ({categorie.products.length})</h1> 
+          <br/> 
+          <ProductGridLayout products={categorie.products}>
+            {(product: ProductData) => <ProductCardLayout button={<Button fullWidth variant="ghost">Ajouter au panier</Button>} product={product}/>}
+          </ProductGridLayout>
+          </>
+          
+        )}
+        </SectionContainer>
+      </div>
+          
           
           
     </>

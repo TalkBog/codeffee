@@ -30,10 +30,10 @@ export default function ProductFilters({categories, onChange}: Props){
         icon={<MagnifyingGlass/>}
         {...form.getInputProps('search')}
         />
-        <Checkbox.Group {...form.getInputProps('categoriesSlug')} >
+        <Checkbox.Group {...form.getInputProps('categoriesSlug')} className="flex flex-col gap-2 my-5">
             {categories.map((categorie: any, index)=> <Checkbox id={"checkbox"+index} value={categorie.slug} label={categorie.name + " (" + categorie.products.length+ ")"}/>)}
         </Checkbox.Group>
-        <Button size="md" type="submit" variant="primary"> Filtrer </Button>
+        <Button size="md" type="submit" variant="primary" fullWidth> Filtrer </Button>
     </form>
     
     </>
