@@ -14,3 +14,8 @@ export type NextPageProps<T = Record<string, string>> = {
    */
   searchParams: { [key: string]: string | string[] | undefined }
 };
+
+export type ProductAttribute = {
+  label : string,
+  rating : number
+}

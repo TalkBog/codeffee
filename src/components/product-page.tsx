@@ -4,11 +4,12 @@ import { Button, ProductCardLayout, ProductGridLayout, ProductRating, SectionCon
 import Image from 'next/image'
 import ProductList from "./product-list"
 import { ProductData } from "tp-kit/types"
+import ProductAttributesTable from "./product-attributes-table"
 
 export default function ProductPage({product}:any){
     return <>
     <SectionContainer fullWidth>
-        <div className="flex flex-row">
+        <div className="flex flex-row items-start">
             <Image src={product.img} alt={product.slug + "Image"} width={350} height={350} priority={true} />
             <div className="flex flex-col gap-16 ml-12">
                 <h1 className="font-bold text-5xl ">{product.name}</h1>
@@ -17,7 +18,15 @@ export default function ProductPage({product}:any){
                 <div className="flex justify-between">
                     <p className="text-xl">{product.price} €</p>
                     <Button>Ajouter au panier</Button>
+                    
                 </div>
+                <ProductAttributesTable rating={[
+                        { label: "Intensité", rating: 3 },
+                        { label: "Volupté", rating: 2 },
+                        { label: "Amertume", rating: 1 },
+                        { label: "Onctuosité", rating: 4 },
+                        { label: "Instagramabilité", rating: 5 },
+                    ]}/>
             </div>
         </div>
     </SectionContainer>
