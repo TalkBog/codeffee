@@ -1,36 +1,36 @@
-import ProductList from "@/components/product-list";
-import { NextPageProps } from "@/types";
 import { BreadCrumbs, SectionContainer } from "tp-kit/components";
-import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data/products-category.data";
+import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
+import { ProductList } from "../../components/product-list";
+import { NextPageProps } from "../../types";
+import { Metadata } from "next";
+const category = PRODUCTS_CATEGORY_DATA[0];
 
 type Props = {
-	categorySlug: string,
+  categorySlug: string;
+};
+
+export async function generateMetadata({ params, searchParams} : NextPageProps<Props>) : Promise<Metadata> {
+  return {
+    title: category.name,
+    description: `Trouvez votre inspiration avec un vaste choix de boissons Starbucks parmi nos produits ${category.name}`
+  }
 }
 
-export default function Home({params} : NextPageProps<Props>) {
-    let categories = PRODUCTS_CATEGORY_DATA;
-    categories = categories.filter((categorie) => {
-        return categorie.slug.toLowerCase() == params.categorySlug.toLowerCase()
-    })
-  
-  
-    return (
-      <main className="bg-coffee-50">
-        <SectionContainer background="coffee" fullWidth>
-            <BreadCrumbs items={[
-                {
-                label: 'Accueil',
-                url: '/'
-                },
-                {
-                    label: params.categorySlug,
-                    url: '/'+ params.categorySlug
-                }
-            ]}
-            className="font-medium"/>
-        </SectionContainer>
-        <ProductList categories={categories} showFilters ={false}/>
-          
-      </main>
-    );
-  }
+export default function CategoryPage({params}: NextPageProps<Props>) {
+  return <SectionContainer>
+    <BreadCrumbs 
+      items={[
+        {
+          label: "Accueil",
+          url: "/"
+        },
+        {
+          label: category.name,
+          url: `/${category.slug}`
+        }
+      ]}
+    />
+
+    <ProductList categories={[category]} />
+  </SectionContainer>
+}

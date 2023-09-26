@@ -1,53 +1,54 @@
-"use client"
-import ProductFilters from "@/components/product-filters";
-import { SYSTEM_ENTRYPOINTS } from "../../node_modules/next/dist/shared/lib/constants";
-import { BreadCrumbs } from "../../tp-kit/components/breadcrumbs";
-import { Button } from "../../tp-kit/components/button";
-import { Heading } from "../../tp-kit/components/heading";
-import { ProductCardLayout } from "../../tp-kit/components/products/product-card-layout";
-import { ProductGridLayout } from "../../tp-kit/components/products/product-grid-layout";
-import { SectionContainer } from "../../tp-kit/components/section-container";
-import { ProductData, ProductsCategoryData } from "../../tp-kit/types";
-import { filterProducts } from "@/utils/filter-products";
-import { useMemo, useState } from "react";
-import { ProductFiltersResult } from "@/types";
+"use client";
+import { FC, memo, useMemo, useState } from "react";
+import { ProductFilters } from "./product-filters";
+import { ProductsCategoryData } from "tp-kit/types";
+import { Button, ProductCardLayout, ProductGridLayout } from "tp-kit/components";
+import { ProductFiltersResult } from "../types";
+import { filterProducts } from "../utils/filter-products";
 import Link from "next/link";
 
-type props = {
-  categories : ProductsCategoryData[],
-  showFilters : boolean
-}
+type Props = {
+  categories: ProductsCategoryData[];
+  showFilters?: boolean
+};
 
-export default function ProductList({categories, showFilters}:props){
-    const [filters, setFilters] = useState<ProductFiltersResult>();
+const ProductList: FC<Props> = memo(function ({ categories, showFilters = false }) {
+  const [filters, setFilters] = useState<ProductFiltersResult | undefined>();
+  const filteredCategories = useMemo(() => filterProducts(categories, filters), [filters, categories]);
 
-    const filtered = useMemo(() => filterProducts(categories, filters), [categories, filters]);
+  return (
+    <div className="flex flex-row gap-8">
+      {/* Filters */}
+      {showFilters && <div className="w-full max-w-[270px]">
+        <ProductFilters categories={categories} onChange={setFilters} />
+      </div>}
 
-    let filter = <></>
+      {/* Grille Produit */}
+      <div className="flex-1 space-y-24">
+        {filteredCategories.map((cat) => (
+          <section key={cat.id}>
+            <h2 className="text-lg font-semibold mb-8 tracking-tight">
+              <Link href={`/${cat.slug}`} className="link">{cat.name} ({cat.products.length})</Link>
+            </h2>
 
-    if(showFilters){
-      filter = <SectionContainer background="coffee" className="basis-1/4 mt-12">
-      <ProductFilters categories={categories} onChange={setFilters}/>
-    </SectionContainer>
-    }
-
-    return <div className="inline-flex flex-row">
-          
-        
-        {filter}
-        
-        <SectionContainer background="coffee" fullWidth>
-        {filtered.map((categorie: ProductsCategoryData, index : number) => 
-          <div key={index}>
-            <h1><Link className="font-bold link" href={"/"+ categorie.slug}>{categorie.name} ({categorie.products.length})</Link></h1>
-            <br/> 
-            <ProductGridLayout products={categorie.products}>
-              {(product: ProductData) => <ProductCardLayout button={<Button fullWidth variant="ghost">Ajouter au panier</Button>} product={product}/>}
+            <ProductGridLayout products={cat.products}>
+              {(product) => (
+                <ProductCardLayout
+                  product={product}
+                  button={
+                    <Button variant="ghost" className="flex-1 !py-4">
+                      Ajouter au panier
+                    </Button>
+                  }
+                />
+              )}
             </ProductGridLayout>
-            <br/>
-          </div>
-          
-        )}
-        </SectionContainer>
+          </section>
+        ))}
       </div>
-}
+    </div>
+  );
+});
+
+ProductList.displayName = "ProductList";
+export { ProductList };

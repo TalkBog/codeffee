@@ -1,27 +1,23 @@
-
-import ProductList from "@/components/product-list";
-import { BreadCrumbs } from "tp-kit/components/breadcrumbs";
-import { SectionContainer } from "tp-kit/components/section-container";
+import { BreadCrumbs, SectionContainer } from "tp-kit/components";
 import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
+import { ProductList } from "../components/product-list";
+import { Metadata } from "next";
+const categories = PRODUCTS_CATEGORY_DATA;
 
+export const metadata:Metadata = {
+  title: `Page d’accueil - Starbucks`,
+  description: "Commandez de délicieuses boissons préparées avec soin par nos baristas"
+}
 
 export default function Home() {
-  const categories = PRODUCTS_CATEGORY_DATA;
+  return (<SectionContainer>
+    <BreadCrumbs items={[
+      {
+        label: "Accueil",
+        url: "/"
+      }
+    ]} />
 
-
-  return (
-    <main className="bg-coffee-50">
-      <SectionContainer background="coffee" fullWidth>
-        <BreadCrumbs items={[
-            {
-              label: 'Accueil',
-              url: '/'
-            }
-          ]}
-          className="font-medium"/>
-      </SectionContainer>
-      <ProductList categories={categories} showFilters ={true}/>
-        
-    </main>
-  );
+    <ProductList categories={categories} showFilters />
+  </SectionContainer>);
 }
