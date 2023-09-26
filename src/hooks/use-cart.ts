@@ -47,19 +47,46 @@ export function updateLine(line: ProductLineData) {
  * @param productId 
  * @returns 
  */
-export function removeLine(productId: number) {}
+export function removeLine(productId: number) {
+    let deleted_line :ProductLineData = {
+        product: {
+            id: 0,
+            name: '',
+            desc: null,
+            slug: '',
+            path: '',
+            img: '',
+            price: 0
+        },
+        qty: 0
+    }
+    useStore.setState((state)=>{
+        deleted_line= state.lines.find((line) => line.product.id == productId)!
+        state.lines.splice(state.lines.indexOf(deleted_line))
+        return {lines: [...state.lines]}
+    })
+    return deleted_line
+}
 
 /**
  * Vide le contenu du panier actuel
  */
-export function clearCart() {}
+export function clearCart() {
+    useStore.setState((state) => ({lines: []}))
+}
 
 /**
  * Calcule le total d'une ligne du panier
  */
-export function computeLineSubTotal(line: ProductLineData): number {}
+export function computeLineSubTotal(line: ProductLineData): number {
+    return line.product.price * line.qty
+}
 
 /**
  * Calcule le total du panier
  */
-export function computeCartTotal(lines: ProductLineData[]): number {}
+export function computeCartTotal(lines: ProductLineData[]): number {
+    let total = 0
+    lines.map((line)=> total+= computeLineSubTotal(line))
+    return total
+}
