@@ -21,8 +21,8 @@ export type NextPageProps<T = Record<string, string>> = {
 export type ProductLineData = {
   product:ProductData
   qty:number
-}
+};
 
 export type CartData={
   lines: ProductLineData[]
-}
+};
