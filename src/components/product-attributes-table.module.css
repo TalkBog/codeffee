@@ -1,6 +1,4 @@
-.table tr {
-    border-bottom: solid;
+.ligne {
+    @apply border-b-2
     
 }
-
-

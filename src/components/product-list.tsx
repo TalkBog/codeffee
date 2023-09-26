@@ -36,7 +36,7 @@ export default function ProductList({categories, showFilters}:props){
         
         {filter}
         
-        <SectionContainer background="coffee" >
+        <SectionContainer background="coffee" fullWidth>
         {filtered.map((categorie: ProductsCategoryData, index : number) => 
           <div key={index}>
             <h1><Link className="font-bold link" href={"/"+ categorie.slug}>{categorie.name} ({categorie.products.length})</Link></h1>

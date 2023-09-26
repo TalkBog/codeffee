@@ -1,6 +1,6 @@
 import { ProductAttribute, ProductFiltersResult } from "@/types"
 import { ProductRating } from "tp-kit/components"
-import './product-attributes-table.module.css'
+import styles from './product-attributes-table.module.css'
 type Props = {
     rating : ProductAttribute[]
 }
@@ -8,11 +8,11 @@ type Props = {
 
 export default function ProductAttributesTable({rating}:Props){
     return<>
-        <table className="table">
+        <table >
             <tbody>
                 {rating.map((rate: ProductAttribute) => {
                     return <>
-                        <tr>
+                        <tr className={styles.ligne}>
                             <td>{rate.label}</td>
                             <td align="right"><ProductRating value={rate.rating} icon="circle"/></td>
                         </tr>
