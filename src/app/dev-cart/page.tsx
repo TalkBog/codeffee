@@ -1,6 +1,6 @@
 "use client";
 import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
-import { Button, ProductCardLayout, SectionContainer } from "tp-kit/components";
+import { Button, Card, Heading, ProductCardLayout, ProductCartLine, SectionContainer } from "tp-kit/components";
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
 
 export default function DevCartPage() {
@@ -23,7 +23,18 @@ export default function DevCartPage() {
 
       {/* Panier */}
       <section className="w-full lg:w-1/3 space-y-8">
-				
+				<Card>
+                    <Heading as="h1" size="sm" weight="bold">Mon Panier</Heading>
+                    <div className="my-16 flex gap-10 flex-col">
+                        <ProductCartLine product={products[0]} qty={1} onDelete={function noRefCheck(){}} onQtyChange={function noRefCheck(){}} className="font-bold" />
+                        <ProductCartLine product={products[1]} qty={2} onDelete={function noRefCheck(){}} onQtyChange={function noRefCheck(){}} className="font-bold"/>
+                    </div>
+                    <div className="flex justify-between font-bold mb-10">
+                        <p>Total</p>
+                        <p>19,51 €</p>
+                    </div>
+                    <Button className="w-full">Commander</Button> 
+                </Card>
 				<Button variant={"outline"} fullWidth>Vider le panier</Button>
 			</section>
       {/* /Panier */}
