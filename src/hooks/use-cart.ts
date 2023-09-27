@@ -3,7 +3,8 @@ import { CartData, ProductLineData } from '../types'
 import { ProductData } from 'tp-kit/types'
 
 export const useCart = create<CartData>(() => ({
-    lines:[]
+    lines:[],
+    count:0
 }))
 
 /**
@@ -21,7 +22,7 @@ export function addLine(product: ProductData) {
             return {lines: [...state.lines]}
         }
         else{
-            return {lines: [...state.lines, {product: product, qty:1}]}
+            return {lines: [...state.lines, {product: product, qty:1}], count: state.count +1 }
         }
     })
 }
@@ -63,7 +64,7 @@ export function removeLine(productId: number) {
     useCart.setState((state)=>{
         deleted_line= state.lines.find((line) => line.product.id == productId)!
         state.lines.splice(state.lines.indexOf(deleted_line))
-        return {lines: [...state.lines]}
+        return {lines: [...state.lines], count: state.count - 1}
     })
     return deleted_line
 }
