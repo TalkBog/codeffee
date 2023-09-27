@@ -14,13 +14,14 @@ export const useCart = create<CartData>(() => ({
  * 
  * @param product 
  */
-export function addLine(product: ProductData) {
-
+export async function addLine(product: ProductData) {
+    await wait(500)
     useCart.setState((state) => {
         const productLine = state.lines.find((line) => line.product.id === product.id)
         
         if(productLine){
             productLine.qty++
+            
             return {lines: [...state.lines]}
             
         }
@@ -28,7 +29,7 @@ export function addLine(product: ProductData) {
             return {lines: [...state.lines, {product: product, qty:1}], count: state.count +1 }
         }
     })
-    return wait(1000)
+    
 }
 
 /**
@@ -64,7 +65,7 @@ export function removeLine(productId: number) {
  * Vide le contenu du panier actuel
  */
 export function clearCart() {
-    useCart.setState((state) => ({lines: []}))
+    useCart.setState((state) => ({lines: [], count: 0}))
 }
 
 /**

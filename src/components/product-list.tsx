@@ -6,6 +6,7 @@ import { Button, ProductCardLayout, ProductGridLayout } from "tp-kit/components"
 import { ProductFiltersResult } from "../types";
 import { filterProducts } from "../utils/filter-products";
 import Link from "next/link";
+import AddToCartButton from "./add-to-cart-button";
 
 type Props = {
   categories: ProductsCategoryData[];
@@ -36,9 +37,7 @@ const ProductList: FC<Props> = memo(function ({ categories, showFilters = false 
                 <ProductCardLayout
                   product={product}
                   button={
-                    <Button variant="ghost" className="flex-1 !py-4">
-                      Ajouter au panier
-                    </Button>
+                    <AddToCartButton product={product}/>
                   }
                 />
               )}
