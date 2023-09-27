@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { CartData, ProductLineData } from '../types'
 import { ProductData } from 'tp-kit/types'
+import { wait } from 'tp-kit/utils/wait'
 
 export const useCart = create<CartData>(() => ({
     lines:[],
@@ -13,15 +14,17 @@ export const useCart = create<CartData>(() => ({
  * 
  * @param product 
  */
-export function addLine(product: ProductData) {
+export async function addLine(product: ProductData) {
     useCart.setState((state) => {
         const productLine = state.lines.find((line) => line.product.id === product.id)
         
         if(productLine){
             productLine.qty++
+            wait(1000)
             return {lines: [...state.lines]}
         }
         else{
+            wait(1000)
             return {lines: [...state.lines, {product: product, qty:1}], count: state.count +1 }
         }
     })
