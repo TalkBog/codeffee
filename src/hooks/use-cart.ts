@@ -14,20 +14,21 @@ export const useCart = create<CartData>(() => ({
  * 
  * @param product 
  */
-export async function addLine(product: ProductData) {
+export function addLine(product: ProductData) {
+
     useCart.setState((state) => {
         const productLine = state.lines.find((line) => line.product.id === product.id)
         
         if(productLine){
             productLine.qty++
-            wait(1000)
             return {lines: [...state.lines]}
+            
         }
         else{
-            wait(1000)
             return {lines: [...state.lines, {product: product, qty:1}], count: state.count +1 }
         }
     })
+    return wait(1000)
 }
 
 /**
@@ -52,24 +53,11 @@ export function updateLine(line: ProductLineData) {
  * @returns 
  */
 export function removeLine(productId: number) {
-    let deleted_line :ProductLineData = {
-        product: {
-            id: 0,
-            name: '',
-            desc: null,
-            slug: '',
-            path: '',
-            img: '',
-            price: 0
-        },
-        qty: 0
-    }
     useCart.setState((state)=>{
-        deleted_line= state.lines.find((line) => line.product.id == productId)!
-        state.lines.splice(state.lines.indexOf(deleted_line))
+        const index_deleted = state.lines.findIndex((line) => line.product.id == productId)
+        state.lines.splice(index_deleted,1)
         return {lines: [...state.lines], count: state.count - 1}
     })
-    return deleted_line
 }
 
 /**
