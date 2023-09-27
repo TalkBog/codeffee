@@ -1,9 +1,12 @@
 "use client";
 import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
 import { Button, Card, Heading, ProductCardLayout, ProductCartLine, SectionContainer } from "tp-kit/components";
+import { addLine, useCart } from "../../hooks/use-cart";
+import { CartData } from "../../types";
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
 
 export default function DevCartPage() {
+  const lines = useCart((state) => state.lines)
   return (
     <SectionContainer
       className="py-36"
@@ -15,7 +18,7 @@ export default function DevCartPage() {
           <ProductCardLayout
             key={product.id}
             product={product}
-            button={<Button variant={"ghost"} fullWidth>Ajouter au panier</Button>}
+            button={<Button variant={"ghost"} fullWidth onClick={() => addLine(product)}>Ajouter au panier</Button>}
           />
         ))}
       </section>
@@ -35,6 +38,7 @@ export default function DevCartPage() {
                     </div>
                     <Button className="w-full">Commander</Button> 
                 </Card>
+                <pre>{JSON.stringify(lines, null, 2)}</pre>
 				<Button variant={"outline"} fullWidth>Vider le panier</Button>
 			</section>
       {/* /Panier */}

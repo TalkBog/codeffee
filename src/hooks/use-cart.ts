@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { CartData, ProductLineData } from '../types'
 import { ProductData } from 'tp-kit/types'
 
-const useStore = create<CartData>(() => ({
+export const useCart = create<CartData>(() => ({
     lines:[]
 }))
 
@@ -13,7 +13,7 @@ const useStore = create<CartData>(() => ({
  * @param product 
  */
 export function addLine(product: ProductData) {
-    useStore.setState((state) => {
+    useCart.setState((state) => {
         const productLine = state.lines.find((line) => line.product.id === product.id)
         
         if(productLine){
@@ -32,7 +32,7 @@ export function addLine(product: ProductData) {
  * @param line 
  */
 export function updateLine(line: ProductLineData) {
-    useStore.setState((state)=>{
+    useCart.setState((state)=>{
         let lineState = state.lines.find((lineS) => line.product.id === lineS.product.id)
         if(lineState){
             lineState = line
@@ -60,7 +60,7 @@ export function removeLine(productId: number) {
         },
         qty: 0
     }
-    useStore.setState((state)=>{
+    useCart.setState((state)=>{
         deleted_line= state.lines.find((line) => line.product.id == productId)!
         state.lines.splice(state.lines.indexOf(deleted_line))
         return {lines: [...state.lines]}
@@ -72,7 +72,7 @@ export function removeLine(productId: number) {
  * Vide le contenu du panier actuel
  */
 export function clearCart() {
-    useStore.setState((state) => ({lines: []}))
+    useCart.setState((state) => ({lines: []}))
 }
 
 /**
