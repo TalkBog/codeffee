@@ -1,7 +1,7 @@
 "use client";
 import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
-import { Button, Card, Heading, ProductCardLayout, ProductCartLine, SectionContainer } from "tp-kit/components";
-import { addLine, useCart } from "../../hooks/use-cart";
+import { Button, Card, FormattedPrice, Heading, ProductCardLayout, ProductCartLine, SectionContainer } from "tp-kit/components";
+import { addLine, computeCartTotal, removeLine, updateLine, useCart } from "../../hooks/use-cart";
 import { CartData } from "../../types";
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
 
@@ -29,16 +29,19 @@ export default function DevCartPage() {
 				<Card>
                     <Heading as="h1" size="sm" weight="bold">Mon Panier</Heading>
                     <div className="my-16 flex gap-10 flex-col">
-                        <ProductCartLine product={products[0]} qty={1} onDelete={function noRefCheck(){}} onQtyChange={function noRefCheck(){}} className="font-bold" />
-                        <ProductCartLine product={products[1]} qty={2} onDelete={function noRefCheck(){}} onQtyChange={function noRefCheck(){}} className="font-bold"/>
+                        {lines.map((line, index) => 
+                        <ProductCartLine key={index} product={line.product} qty={line.qty} onQtyChange={(qty) => {
+                          line.qty = qty
+                          updateLine(line)
+                        }} onDelete={()=> removeLine(line.product.id)} className="font-bold" />
+                        )}
                     </div>
                     <div className="flex justify-between font-bold mb-10">
                         <p>Total</p>
-                        <p>19,51 €</p>
+                        <FormattedPrice price={computeCartTotal(lines)}/>
                     </div>
                     <Button className="w-full">Commander</Button> 
                 </Card>
-                <pre>{JSON.stringify(lines, null, 2)}</pre>
 				<Button variant={"outline"} fullWidth>Vider le panier</Button>
 			</section>
       {/* /Panier */}

@@ -87,6 +87,6 @@ export function computeLineSubTotal(line: ProductLineData): number {
  */
 export function computeCartTotal(lines: ProductLineData[]): number {
     let total = 0
-    lines.map((line)=> total+= computeLineSubTotal(line))
+    lines.map((line)=> total += computeLineSubTotal(line))
     return total
 }
