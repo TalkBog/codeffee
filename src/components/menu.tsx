@@ -4,6 +4,7 @@ import { FC, memo, Fragment } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import { MenuBar, Button } from "tp-kit/components";
 import { ShoppingBag, X } from "@phosphor-icons/react";
+import CartCounter from "./cart-counter";
 
 type Props = {};
 
@@ -20,7 +21,7 @@ const Menu: FC<Props> = memo(function () {
                   : <ShoppingBag size={24} weight="regular" />}
 
                 <div className="aspect-square bg-brand text-white text-center text-xs absolute right-0 top-0 rounded-full flex items-center justify-center h-[20px] w-[20px]">
-                  <div>0</div>
+                  <div><CartCounter/></div>
                 </div>
               </Popover.Button>
 

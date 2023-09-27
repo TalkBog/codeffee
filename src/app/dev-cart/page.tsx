@@ -4,6 +4,7 @@ import { Button, Card, FormattedPrice, Heading, ProductCardLayout, ProductCartLi
 import { addLine, computeCartTotal, removeLine, updateLine, useCart } from "../../hooks/use-cart";
 import { CartData } from "../../types";
 import Cart from "../../components/cart";
+import CartCounter from "../../components/cart-counter";
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
 
 export default function DevCartPage() {
@@ -24,7 +25,6 @@ export default function DevCartPage() {
         ))}
       </section>
       {/* /Produits */}
-
       {/* Panier */}
       <section className="w-full lg:w-1/3 space-y-8">
 				<Cart/>
