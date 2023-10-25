@@ -1,20 +1,10 @@
 version: '3.1'
 
- 
-
 services:
-
-  docs:
-    image: 'node:alpine'
-    ports:
-      - 6006:6006
-    working_dir: '/app'
-    volumes:
-
-      - ./tp-kit:/app
-    command: "npm run storybook:start"
   db:
     image: postgres:alpine
     restart: unless-stopped
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: password
