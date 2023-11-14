@@ -3,20 +3,40 @@ import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
 import { ProductList } from "../../components/product-list";
 import { NextPageProps } from "../../types";
 import { Metadata } from "next";
-const category = PRODUCTS_CATEGORY_DATA[0];
+import prisma from "../../utils/prisma";
+import { notFound } from "next/navigation";
+import { cache } from "react";
 
 type Props = {
   categorySlug: string;
 };
 
 export async function generateMetadata({ params, searchParams} : NextPageProps<Props>) : Promise<Metadata> {
+  const category = await getCategory(params.categorySlug)
+  if(!category){
+    return notFound()
+  }
   return {
     title: category.name,
     description: `Trouvez votre inspiration avec un vaste choix de boissons Starbucks parmi nos produits ${category.name}`
   }
 }
 
-export default function CategoryPage({params}: NextPageProps<Props>) {
+export const getCategory = cache(async (slug: string) => {
+  const category = await prisma.productCategory.findUnique({
+    where: {
+      slug: slug,
+    },
+    include: {products:true}
+  })
+  return category
+})
+
+export default async function CategoryPage({params}: NextPageProps<Props>) {
+  const category = await getCategory(params.categorySlug)
+  if(!category){
+    return notFound()
+  }
   return <SectionContainer>
     <BreadCrumbs 
       items={[
