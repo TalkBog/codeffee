@@ -1,5 +1,5 @@
 "use client";
-import { FC, memo, useMemo, useState } from "react";
+import { FC, memo, useEffect, useMemo, useState } from "react";
 import { ProductFilters } from "./product-filters";
 import { ProductsCategoryData } from "tp-kit/types";
 import { Button, ProductCardLayout, ProductGridLayout } from "tp-kit/components";
@@ -15,8 +15,24 @@ type Props = {
 
 const ProductList: FC<Props> = memo(function ({ categories, showFilters = false }) {
   const [filters, setFilters] = useState<ProductFiltersResult | undefined>();
-  const filteredCategories = useMemo(() => filterProducts(categories, filters), [filters, categories]);
+  const [filteredCategories, setFilteredCategories] = useState(categories)
 
+  useEffect( () => {
+    const url = new URLSearchParams()
+    if(filters?.search)
+      url.set('search',filters?.search)
+    filters?.categoriesSlugs.forEach((categorie) => url.append('cat', categorie))
+    console.log(url.toString())
+    fetch("http://localhost:3000/api/product-filters?"+url.toString())
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setFilteredCategories(result.categories)
+        }
+      )
+
+
+  }, [filters])
   return (
     <div className="flex flex-row gap-8">
       {/* Filters */}
