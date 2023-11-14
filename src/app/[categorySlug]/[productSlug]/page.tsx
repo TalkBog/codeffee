@@ -16,23 +16,46 @@ import {
   ProductAttributesTable,
 } from "../../../components/product-attributes-table";
 import AddToCartButton from "../../../components/add-to-cart-button";
-const product = {
-  ...PRODUCTS_CATEGORY_DATA[0].products[0],
-  category: {
-    ...PRODUCTS_CATEGORY_DATA[0],
-    products: PRODUCTS_CATEGORY_DATA[0].products.slice(1),
-  },
-};
+import { cache } from "react";
+import prisma from "../../../utils/prisma";
+import { notFound } from "next/navigation";
 
+const getProduct = cache(async (slug:string) => {
+  const product = await prisma.product.findUnique({
+    where:{
+      slug: slug
+    },
+    include: {
+      category : {
+        include:{
+          products:{
+            where:{
+              slug: {
+                not: slug
+              }
+            }
+          }
+        }
+      }
+    } 
+  })
+  return product
+})
 type Props = {
   categorySlug: string;
   productSlug: string;
 };
 
+
+
 export async function generateMetadata({
   params,
   searchParams,
 }: NextPageProps<Props>): Promise<Metadata> {
+  const product = await getProduct(params.productSlug)
+  if(!product){
+    return notFound()
+  }
   return {
     title: product.name,
     description:
@@ -50,6 +73,10 @@ const productAttributes: ProductAttribute[] = [
 ];
 
 export default async function ProductPage({ params }: NextPageProps<Props>) {
+  const product = await getProduct(params.productSlug)
+  if(!product){
+    return notFound()
+  }
   return (
     <SectionContainer wrapperClassName="max-w-5xl">
       <BreadCrumbs
