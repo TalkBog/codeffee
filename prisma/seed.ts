@@ -8,7 +8,6 @@ async function main() {
     const deleteProductCategory = prisma.productCategory.deleteMany()
     await prisma.$transaction([deleteProductCategory])
     for(const productcategory of PRODUCTS_CATEGORY_DATA){
-        console.log("insertion catégorie " + productcategory.id)
     await prisma.productCategory.create({
         data:{
             id:productcategory.id,
@@ -18,7 +17,6 @@ async function main() {
     })
     await Promise.all(
         productcategory.products.map((product) =>{
-            console.log("insertion produit " + product.id)
             return prisma.product.create({
                 data:{
                     name: product.name,
