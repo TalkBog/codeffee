@@ -1,16 +1,19 @@
 "use client";
 import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
-import { Button, Card, FormattedPrice, Heading, ProductCardLayout, ProductCartLine, SectionContainer } from "tp-kit/components";
-import { addLine, clearCart, computeCartTotal, removeLine, updateLine, useCart } from "../../hooks/use-cart";
-import { CartData } from "../../types";
-import Cart from "../../components/cart";
-import CartCounter from "../../components/cart-counter";
-import AddToCartButton from "../../components/add-to-cart-button";
-import { clearLine } from "readline";
+import {
+  Button,
+  ProductCardLayout,
+  SectionContainer,
+} from "tp-kit/components";
+import { addLine } from "../../hooks/use-cart";
+import { Cart } from "../../components/cart";
+import { CartCounter } from "../../components/cart-counter";
+import { AddToCartButton } from "../../components/add-to-cart-button";
 const products = PRODUCTS_CATEGORY_DATA[0].products.slice(0, 3);
 
 export default function DevCartPage() {
-  console.log("rendu page")
+  console.log("rendu page");
+
   return (
     <SectionContainer
       className="py-36"
@@ -22,19 +25,18 @@ export default function DevCartPage() {
           <ProductCardLayout
             key={product.id}
             product={product}
-            button={<AddToCartButton product={product}/>}
+            button={<AddToCartButton product={product} />}
           />
         ))}
       </section>
       {/* /Produits */}
+
       {/* Panier */}
-      <section className="w-full lg:w-1/3 space-y-8">
-        <Card>
-          <Cart/>
-        </Card>
-				
-				<Button variant={"outline"} fullWidth onClick={() => clearCart()}>Vider le panier</Button>
-			</section>
+      <section className="w-full lg:w-1/3">
+        <p className="mb-8">Produits dans le panier : <CartCounter /></p>
+
+        <Cart />
+      </section>
       {/* /Panier */}
     </SectionContainer>
   );

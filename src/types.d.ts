@@ -1,4 +1,4 @@
-import { ProductData, ProductsCategoryData } from "tp-kit/types"
+import { type ProductData, type ProductsCategoryData } from "tp-kit/types"
 
 export type ProductFiltersResult = {
   categoriesSlugs : string[],
@@ -19,11 +19,11 @@ export type NextPageProps<T = Record<string, string>> = {
 };
 
 export type ProductLineData = {
-  product:ProductData
-  qty:number
+  product: ProductData,
+  qty: number
 };
 
-export type CartData={
-  lines: ProductLineData[]
-  count: number
-};
+export type CartData = {
+  lines: ProductLineData[],
+  count: number,
+}

@@ -1,45 +1,38 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
-import { ProductsCategoryData } from 'tp-kit/types';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
+/**
+ * Populates the DB with initial data
+ */
 async function main() {
-    const deleteProductCategory = prisma.productCategory.deleteMany()
-    await prisma.$transaction([deleteProductCategory])
-    for(const productcategory of PRODUCTS_CATEGORY_DATA){
-    await prisma.productCategory.create({
-        data:{
-            id:productcategory.id,
-            name: productcategory.name,
-            slug: productcategory.slug
+  // Deletes the existing categories first
+  await prisma.productCategory.deleteMany({});
+
+  // Creates the promises categories and their products from the static data we have
+  const promises = PRODUCTS_CATEGORY_DATA.map(({products, ...category}) => {
+    return prisma.productCategory.create({
+      data: {
+        ...category,
+        products: {
+          createMany: {
+            skipDuplicates: true,
+            data: products
+          }
         }
-    })
-    await Promise.all(
-        productcategory.products.map((product) =>{
-            return prisma.product.create({
-                data:{
-                    name: product.name,
-                    slug: product.slug,
-                    price: product.price,
-                    path: product.path,
-                    desc: product.desc,
-                    img: product.img,
-                    categoryId:productcategory.id
-                }
-            })
-        })
-    )
-    
-    }
-    
+      },
+    });
+  });
+
+  // Execute the categories creation operations
+  await Promise.all(promises);
 }
+
 main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
+  .then(async () => await prisma.$disconnect)
   .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

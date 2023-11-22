@@ -1,27 +1,29 @@
-"use client"
-import { Button, ButtonProps } from "tp-kit/components"
-import { ProductData } from "tp-kit/types"
-import { addLine } from "../hooks/use-cart"
-import { Children, useState } from "react"
+"use client";
+
+import { FC, memo, useCallback, useState } from "react";
+import { Button, type ButtonProps } from "tp-kit/components";
+import { type ProductData } from "tp-kit/types";
+import { addLine } from "../hooks/use-cart";
 import { Loader } from '@mantine/core';
 
-type props = Pick<ButtonProps, 'variant'|'fullWidth'> & {
-    product: ProductData, 
-    loaderColor? : string 
-} 
+type Props = Pick<ButtonProps, 'variant' | 'fullWidth'> & { 
+  product: ProductData;
+};
 
+const AddToCartButton: FC<Props> = memo(function ({ product, variant = 'ghost', fullWidth= true }) {
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const handleAddToCart = useCallback(async () => {
+    setLoading(true);
+    await addLine(product);
+    setLoading(false);
+  }, [product]);
 
+  return (
+    <Button variant={variant} fullWidth={fullWidth} onClick={handleAddToCart} disabled={isLoading} className="flex justify-center items-center gap-2">
+      Ajouter au panier {isLoading && <Loader className="stroke-brand" size={18} />}
+    </Button>
+  );
+});
 
-export default function AddToCartButton({product, loaderColor = "rgba(56, 138, 107, 1)", variant = "ghost", fullWidth = true}:props){
-    const [disabled, setDisabled] = useState(false)
-    const [children, setChildren] = useState(<>Ajouter au panier</>)
-    return <>
-        <Button fullWidth = {fullWidth} variant={variant} className="flex justify-center content-center" children={children} disabled={disabled} onClick={async () => {
-            setDisabled(true)
-            setChildren(<Loader color={loaderColor} className="self-center justify-self-center" size="xs"/>)
-            await addLine(product)
-            setChildren(<>Ajouter au panier</>)
-            setDisabled(false)
-        }}/>
-    </>
-}
+AddToCartButton.displayName = "AddToCartButton";
+export { AddToCartButton };

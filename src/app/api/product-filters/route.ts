@@ -1,34 +1,41 @@
-import { NextRequest, NextResponse } from "next/server"
-import prisma from "../../../utils/prisma"
+import { NextRequest, NextResponse } from "next/server";
+import { ProductFiltersResult } from "../../../types";
+import prisma from "../../../utils/prisma";
 
-export async function GET(request: NextRequest) {
-    const searchParams = request.nextUrl.searchParams
-    const search = searchParams.get('search')
-    const cat = searchParams.getAll('cat')
-    console.log(cat, search)
-    const result = await prisma.productCategory.findMany({
-        where: cat.length > 0 ?{
-            slug:{
-                in:cat
-            }
-        }: {}, 
-        include:{
-            products: search ? {
-                where:{
-                    name:{
-                        contains: search,
-                        mode: 'insensitive',
-                    }
-                }
-            } : true
-        }
-    })
+export async function GET(request:NextRequest) {
+  const params : ProductFiltersResult = {
+    categoriesSlugs: request.nextUrl.searchParams.getAll('cat'),
+    search: request.nextUrl.searchParams.get('search') ?? undefined
+  };
 
-    return NextResponse.json({
-        "params": {
-            "categorieSlugs":cat,
-            "search": search
+  const categories = await prisma.productCategory.findMany({
+    include: {
+      // Filters on product name
+      products: params.search ? {
+        where: {
+          name: {
+            contains: params.search,
+            // Ignore the case
+            mode: "insensitive" 
+          },
         },
-        "categories":result
-    })
+      } : true
+    },
+    // Filters on categories slugs
+    where: params.categoriesSlugs ? {
+      slug: {
+        in: params.categoriesSlugs
+      }
+    } : undefined
+  })
+  // Remove empty categories from results
+  .then(categories => {
+    console.log(categories);
+    return categories.filter(cat => cat.products.length > 0)
+  });
+
+  return NextResponse.json({
+    params,
+    categories
+  });
 }

@@ -9,53 +9,41 @@ import {
   SectionContainer,
 } from "tp-kit/components";
 import { NextPageProps } from "../../../types";
-import { PRODUCTS_CATEGORY_DATA } from "tp-kit/data";
 import { Metadata } from "next";
 import {
   ProductAttribute,
   ProductAttributesTable,
 } from "../../../components/product-attributes-table";
-import AddToCartButton from "../../../components/add-to-cart-button";
+import { AddToCartButton } from "../../../components/add-to-cart-button";
 import { cache } from "react";
 import prisma from "../../../utils/prisma";
 import { notFound } from "next/navigation";
 
-const getProduct = cache(async (slug:string) => {
-  const product = await prisma.product.findUnique({
-    where:{
-      slug: slug
-    },
-    include: {
-      category : {
-        include:{
-          products:{
-            where:{
-              slug: {
-                not: slug
-              }
-            }
-          }
+const getProduct = cache((slug: string) => prisma.product.findUnique({
+  where: {slug},
+  include: {
+    category: {
+      include: {
+        products: {
+          where: { slug: {not: slug}}
         }
       }
-    } 
-  })
-  return product
-})
+    }
+  }
+}));
+
 type Props = {
   categorySlug: string;
   productSlug: string;
 };
 
-
-
 export async function generateMetadata({
   params,
   searchParams,
 }: NextPageProps<Props>): Promise<Metadata> {
-  const product = await getProduct(params.productSlug)
-  if(!product){
-    return notFound()
-  }
+  const product = await getProduct(params.productSlug);
+  if (!product) return {};
+
   return {
     title: product.name,
     description:
@@ -73,10 +61,9 @@ const productAttributes: ProductAttribute[] = [
 ];
 
 export default async function ProductPage({ params }: NextPageProps<Props>) {
-  const product = await getProduct(params.productSlug)
-  if(!product){
-    return notFound()
-  }
+  const product = await getProduct(params.productSlug);
+  if (!product) notFound();
+
   return (
     <SectionContainer wrapperClassName="max-w-5xl">
       <BreadCrumbs
@@ -125,7 +112,7 @@ export default async function ProductPage({ params }: NextPageProps<Props>) {
               <p className="!my-0 text-xl">
                 <FormattedPrice price={product.price} />
               </p>
-              <AddToCartButton variant={"primary"} product={product} loaderColor="white" fullWidth={false}/>
+              <AddToCartButton variant={"primary"} product={product} fullWidth={false} />
             </div>
           </div>
 
@@ -146,7 +133,9 @@ export default async function ProductPage({ params }: NextPageProps<Props>) {
               <ProductCardLayout
                 product={product}
                 button={
-                  <AddToCartButton product={product} />
+                  <Button variant="ghost" className="flex-1 !py-4">
+                    Ajouter au panier
+                  </Button>
                 }
               />
             )}

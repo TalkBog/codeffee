@@ -1,22 +1,69 @@
-import { Card, Heading,ProductCartLine,FormattedPrice,Button } from "tp-kit/components"
-import { updateLine,computeCartTotal,removeLine, useCart } from "../hooks/use-cart"
+"use client";
 
-export default function Cart(){
-    const lines = useCart((state) => state.lines)
-    return <>
-            <Heading as="h1" size="sm" weight="bold">Mon Panier</Heading>
-            <div className="my-16 flex gap-10 flex-col">
-                {lines.map((line, index) => 
-                <ProductCartLine key={index} product={line.product} qty={line.qty} onQtyChange={(qty) => {
-                    line.qty = qty
-                    updateLine(line)
-                }} onDelete={()=> removeLine(line.product.id)} className="font-bold" />
-                )}
-            </div>
-            <div className="flex justify-between font-bold mb-10">
-                <p>Total</p>
-                <FormattedPrice price={computeCartTotal(lines)}/>
-            </div>
-            <Button className="w-full">Commander</Button> 
-    </>
-}
+import { FC, memo, useCallback } from "react";
+import { ProductCartLine, FormattedPrice, Button } from "tp-kit/components";
+import {
+  removeLine,
+  updateLine,
+  computeCartTotal,
+  useCart,
+  clearCart,
+} from "../hooks/use-cart";
+import { createOrder } from "../actions/create-order";
+
+type Props = {};
+
+const Cart: FC<Props> = memo(function () {
+  const lines = useCart((cart) => cart.lines);
+  const wrapperClasses = "bg-white rounded-lg p-6 shadow-xl space-y-12";
+
+  const handleCreateOrder = useCallback(async () => {
+    await createOrder(useCart.getState());
+    clearCart();
+  }, []);
+
+  if (lines.length === 0)
+    return (
+      <div className={wrapperClasses}>
+        <p className="my-12 text-center text-gray-600 text-sm">
+          Votre panier est vide
+        </p>
+      </div>
+    );
+
+  return (
+    <div className={wrapperClasses}>
+      <h2 className="text-sm uppercase font-bold tracking-wide">Mon panier</h2>
+
+      <div className="space-y-4">
+        {lines.map(({ product, qty }) => (
+          <ProductCartLine
+            key={product.id}
+            product={product}
+            qty={qty}
+            onDelete={() => removeLine(product.id)}
+            onQtyChange={(qty) => updateLine({ product, qty })}
+          />
+        ))}
+      </div>
+
+      <table className="w-full">
+        <tbody>
+          <tr>
+            <th className="text-left">Total</th>
+            <td className="text-right font-bold">
+              <FormattedPrice price={computeCartTotal(lines)} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <Button fullWidth size="lg" onClick={handleCreateOrder}>
+        Commander
+      </Button>
+    </div>
+  );
+});
+
+Cart.displayName = "Cart";
+export { Cart };
