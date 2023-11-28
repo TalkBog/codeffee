@@ -1,5 +1,5 @@
 "use client"
-import { Heading, Button, NoticeMessageData, NoticeMessage } from "tp-kit/components";
+import { Heading, Button, NoticeMessageData, NoticeMessage, useZodI18n } from "tp-kit/components";
 import { TextInput, PasswordInput } from '@mantine/core';
 import { useForm , zodResolver} from '@mantine/form';
 import Link from "next/link";
@@ -31,6 +31,7 @@ export default function page (){
         password: z.string().min(6).nonempty()
       });
 
+      useZodI18n(z);
       const form = useForm({
         validate: zodResolver(schema),
       })
@@ -46,56 +47,56 @@ export default function page (){
         Inscription
         </Heading>
         {notices.map((notice, i) => <NoticeMessage key={i} {...notice} onDismiss={() => removeNotice(i)}/>)}
-
-        <form className="flex flex-col gap-8" onSubmit={form.onSubmit((values) =>{ 
-            console.log(values)
-            addSuccess()
-        })}>
-             
-            <TextInput
-            variant="filled"
-            label="Nom"
-            description="Le nom qui sera utilisé dans vos commandes"
-            withAsterisk
-            placeholder="Maud zarella .. "
-            {...form.getInputProps('name')}
-            />
-
-            <TextInput
-            variant="filled"
-            label="Adresse email"
-            withAsterisk
-            placeholder="lin.guini@barilla.it..."
-            {...form.getInputProps('email')}
-            />
-
-            <PasswordInput
+            <form className="flex flex-col gap-8" onSubmit={form.onSubmit((values) =>{ 
+                console.log(values)
+                addSuccess()
+            })}>
+                
+                <TextInput
                 variant="filled"
-                label="Mot de passe"
+                label="Nom"
+                description="Le nom qui sera utilisé dans vos commandes"
                 withAsterisk
-                placeholder="Ke$$a..."
-                {...form.getInputProps('password')}
-            />
-            <div className="flex flex-col gap-2">
-                <Button
-                fullWidth
-                onClick={function noRefCheck(){}}
-                size="lg"
-                type="submit"
-                variant="primary"
-                >
-                S'inscrire
-                </Button>
+                placeholder="Maud zarella .. "
+                {...form.getInputProps('name')}
+                />
 
-                <Link
-                className=" text-brand font-medium text-center p-4"
-                href={"/connexion"}
-                >
-                Déja un compte ? Se connecter
-                </Link>
-            </div>
-            
+                <TextInput
+                variant="filled"
+                label="Adresse email"
+                withAsterisk
+                placeholder="lin.guini@barilla.it..."
+                {...form.getInputProps('email')}
+                />
 
-        </form>
+                <PasswordInput
+                    variant="filled"
+                    label="Mot de passe"
+                    withAsterisk
+                    placeholder="Ke$$a..."
+                    {...form.getInputProps('password')}
+                />
+                <div className="flex flex-col gap-2">
+                    <Button
+                    fullWidth
+                    onClick={function noRefCheck(){}}
+                    size="lg"
+                    type="submit"
+                    variant="primary"
+                    >
+                    S'inscrire
+                    </Button>
+
+                    <Link
+                    className=" text-brand font-medium text-center p-4"
+                    href={"/connexion"}
+                    >
+                    Déja un compte ? Se connecter
+                    </Link>
+                </div>
+                
+
+            </form>    
+        
     </>
 }
