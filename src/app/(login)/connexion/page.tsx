@@ -1,6 +1,7 @@
 "use client"
 import { Heading, Button } from "tp-kit/components";
 import { TextInput, PasswordInput } from '@mantine/core';
+import Link from "next/link";
 
 export default function page (){
     return<>
@@ -38,15 +39,12 @@ export default function page (){
                 Se connecter
                 </Button>
 
-                <Button
-                className=" text-brand font-bold"
-                fullWidth
-                onClick={function noRefCheck(){}}
-                size="md"
-                variant="ghost"
+                <Link
+                className=" text-brand font-medium text-center p-4"
+                href={"/inscription"}
                 >
                 créer un compte
-                </Button>
+                </Link>
             </div>
             
 
