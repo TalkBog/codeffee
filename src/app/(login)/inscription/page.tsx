@@ -5,10 +5,19 @@ import { useForm , zodResolver} from '@mantine/form';
 import Link from "next/link";
 import z from 'zod'
 import { useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+const schema = z.object({
+    name: z.string().nonempty(),
+    email: z.string().email().nonempty(),
+    password: z.string().min(6).nonempty()
+  });
+
+  type schema = z.infer<typeof schema>;
 
 export default function page (){
-
     const [notices, setNotices] = useState<NoticeMessageData[]>([]);
+    const supabase = createClientComponentClient()
 
     function addError() {
     setNotices(n => [...n, { type: "error", message: "Cette adresse n'est pas disponible" }]);
@@ -25,15 +34,14 @@ export default function page (){
     });
     }
 
-    const schema = z.object({
-        name: z.string().nonempty(),
-        email: z.string().email().nonempty(),
-        password: z.string().min(6).nonempty()
-      });
-
-      useZodI18n(z);
-      const form = useForm({
+    useZodI18n(z);
+    const form = useForm<schema>({
         validate: zodResolver(schema),
+        initialValues: {
+            name : '',
+            email: '',
+            password: ''
+        }
       })
 
     return<>
@@ -47,9 +55,26 @@ export default function page (){
         Inscription
         </Heading>
         {notices.map((notice, i) => <NoticeMessage key={i} {...notice} onDismiss={() => removeNotice(i)}/>)}
-            <form className="flex flex-col gap-8" onSubmit={form.onSubmit((values) =>{ 
-                console.log(values)
-                addSuccess()
+            <form className="flex flex-col gap-8" onSubmit={form.onSubmit(async (values) =>{
+                const email = values.email
+                const password = values.password 
+                const name = values.name
+                const result = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            name
+                        },
+                        emailRedirectTo: `${location.origin}/auth/callback`,
+                    },
+                  })
+                if(!result.error){
+                    addSuccess()
+                }
+                else{
+                    addError()
+                }
             })}>
                 
                 <TextInput
