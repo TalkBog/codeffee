@@ -4,6 +4,7 @@ import { TextInput, PasswordInput } from '@mantine/core';
 import Link from "next/link";
 
 export default function page (){
+    
     return<>
         <Heading
         as="h1"

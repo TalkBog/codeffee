@@ -7,7 +7,7 @@ export default function layout({
   }){
     return(
       <SectionContainer background="coffee" >
-          <Card className="mx-[30%] my-[4%] flex flex-col gap-9">
+          <Card className="mx-[30%] my-[4%] flex flex-col">
              {children}
           </Card>
       </SectionContainer>

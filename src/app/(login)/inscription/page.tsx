@@ -1,16 +1,34 @@
 "use client"
-import { Heading, Button } from "tp-kit/components";
+import { Heading, Button, NoticeMessageData, NoticeMessage } from "tp-kit/components";
 import { TextInput, PasswordInput } from '@mantine/core';
 import { useForm , zodResolver} from '@mantine/form';
 import Link from "next/link";
 import z from 'zod'
+import { useState } from "react";
 
 export default function page (){
 
+    const [notices, setNotices] = useState<NoticeMessageData[]>([]);
+
+    function addError() {
+    setNotices(n => [...n, { type: "error", message: "Cette adresse n'est pas disponible" }]);
+    }
+
+    function addSuccess() {
+    setNotices(n => [...n, { type: "success", message: "Votre inscription a bien été prise en compte. Valider votre adresse email pour vous connecter." }]);
+    }
+
+    function removeNotice(index:number) {
+    setNotices(n => {
+        delete(n[index]);
+        return Object.values(n);
+    });
+    }
+
     const schema = z.object({
-        name: z.string({required_error: "Le nom est requis", invalid_type_error: "Nom invalide"}).min(1,{message: "Le nom est requis"}),
-        email: z.string({required_error: "L'email est requis"}).email({ message: "Adresse mail invalide" }),
-        password: z.string({required_error: "Le mot de passe est requis", invalid_type_error: "Mot de passe invalide"}).min(6,{message: "Le mot de passe doit avoir au minimum 6 charactères"})
+        name: z.string().nonempty(),
+        email: z.string().email().nonempty(),
+        password: z.string().min(6).nonempty()
       });
 
       const form = useForm({
@@ -23,11 +41,17 @@ export default function page (){
         size="md"
         variant="black"
         weight="bold"
+        className="mb-4"
         >
         Inscription
         </Heading>
+        {notices.map((notice, i) => <NoticeMessage key={i} {...notice} onDismiss={() => removeNotice(i)}/>)}
 
-        <form className="flex flex-col gap-8" onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form className="flex flex-col gap-8" onSubmit={form.onSubmit((values) =>{ 
+            console.log(values)
+            addSuccess()
+        })}>
+             
             <TextInput
             variant="filled"
             label="Nom"
