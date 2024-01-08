@@ -1,7 +1,13 @@
 "use client";
 
-import { FC, memo, useCallback } from "react";
-import { ProductCartLine, FormattedPrice, Button } from "tp-kit/components";
+import { FC, memo, useCallback, useState } from "react";
+import {
+  ProductCartLine,
+  FormattedPrice,
+  Button,
+  NoticeMessageData,
+  NoticeMessage,
+} from "tp-kit/components";
 import {
   removeLine,
   updateLine,
@@ -16,16 +22,38 @@ type Props = {};
 const Cart: FC<Props> = memo(function () {
   const lines = useCart((cart) => cart.lines);
   const wrapperClasses = "bg-white rounded-lg p-6 shadow-xl space-y-12";
+  const [notices, setNotices] = useState<NoticeMessageData[]>([]);
+
+  function addError() {
+    setNotices((n) => [
+      ...n,
+      {
+        type: "error",
+        message: "Veuillez vous connecter pour passer commande",
+      },
+    ]);
+  }
+
+  function removeNotice(index: number) {
+    setNotices((n) => {
+      delete n[index];
+      return Object.values(n);
+    });
+  }
 
   const handleCreateOrder = useCallback(async () => {
-    await createOrder(useCart.getState());
-    clearCart();
+    const { error, success } = await createOrder(useCart.getState());
+    if (success) {
+      clearCart();
+    } else {
+      addError();
+    }
   }, []);
 
   if (lines.length === 0)
     return (
       <div className={wrapperClasses}>
-        <p className="my-12 text-center text-gray-600 text-sm">
+        <p className="my-12 text-center text-sm text-gray-600">
           Votre panier est vide
         </p>
       </div>
@@ -33,8 +61,10 @@ const Cart: FC<Props> = memo(function () {
 
   return (
     <div className={wrapperClasses}>
-      <h2 className="text-sm uppercase font-bold tracking-wide">Mon panier</h2>
-
+      <h2 className="text-sm font-bold uppercase tracking-wide">Mon panier</h2>
+      {notices.map((notice, i) => (
+        <NoticeMessage key={i} {...notice} onDismiss={() => removeNotice(i)} />
+      ))}
       <div className="space-y-4">
         {lines.map(({ product, qty }) => (
           <ProductCartLine
