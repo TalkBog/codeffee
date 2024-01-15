@@ -19,18 +19,40 @@ import { cache } from "react";
 import prisma from "../../../utils/prisma";
 import { notFound } from "next/navigation";
 
-const getProduct = cache((slug: string) => prisma.product.findUnique({
-  where: {slug},
-  include: {
-    category: {
-      include: {
-        products: {
-          where: { slug: {not: slug}}
-        }
-      }
-    }
+export const dynamic = "force-static";
+export async function generateStaticParams() {
+  const categories = await prisma.productCategory.findMany({
+    include: {
+      products: true,
+    },
+  });
+
+  let staticParam: { categorySlug: string; productSlug: string }[] = [];
+  for (const categorie of categories) {
+    categorie.products.map((product) => {
+      staticParam.push({
+        categorySlug: categorie.slug,
+        productSlug: product.slug,
+      });
+    });
   }
-}));
+  return staticParam;
+}
+
+const getProduct = cache((slug: string) =>
+  prisma.product.findUnique({
+    where: { slug },
+    include: {
+      category: {
+        include: {
+          products: {
+            where: { slug: { not: slug } },
+          },
+        },
+      },
+    },
+  }),
+);
 
 type Props = {
   categorySlug: string;
@@ -85,13 +107,13 @@ export default async function ProductPage({ params }: NextPageProps<Props>) {
       />
 
       {/* Produit */}
-      <section className="flex flex-col md:flex-row justify-center gap-8">
+      <section className="flex flex-col justify-center gap-8 md:flex-row">
         {/* Product Image */}
         <div className="relative">
           <ProductImage
             {...product}
             priority
-            className="rounded-lg sticky top-12 object-cover sm:aspect-video md:aspect-auto w-full md:w-[300px]"
+            className="sticky top-12 w-full rounded-lg object-cover sm:aspect-video md:aspect-auto md:w-[300px]"
           />
         </div>
 
@@ -108,11 +130,15 @@ export default async function ProductPage({ params }: NextPageProps<Props>) {
             <p>{product.desc}</p>
 
             {/* Prix et ajout au panier */}
-            <div className="flex justify-between items-center gap-8">
+            <div className="flex items-center justify-between gap-8">
               <p className="!my-0 text-xl">
                 <FormattedPrice price={product.price} />
               </p>
-              <AddToCartButton variant={"primary"} product={product} fullWidth={false} />
+              <AddToCartButton
+                variant={"primary"}
+                product={product}
+                fullWidth={false}
+              />
             </div>
           </div>
 

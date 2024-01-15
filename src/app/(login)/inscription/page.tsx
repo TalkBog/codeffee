@@ -21,7 +21,7 @@ const schema = z.object({
 
 type schema = z.infer<typeof schema>;
 
-export default function page() {
+export default function Page() {
   const [notices, setNotices] = useState<NoticeMessageData[]>([]);
   const supabase = createClientComponentClient();
 
@@ -123,7 +123,7 @@ export default function page() {
             type="submit"
             variant="primary"
           >
-            S'inscrire
+            S&apos;inscrire
           </Button>
 
           <Link

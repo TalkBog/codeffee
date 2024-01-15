@@ -21,7 +21,7 @@ const schema = z.object({
 
 type schema = z.infer<typeof schema>;
 
-export default function page() {
+export default function Page() {
   const router = useRouter();
   const [notices, setNotices] = useState<NoticeMessageData[]>([]);
   const supabase = createClientComponentClient();

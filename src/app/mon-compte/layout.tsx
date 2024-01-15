@@ -12,7 +12,8 @@ import { cookies } from "next/headers";
 import LogOutButton from "../../components/log-out-button";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const supabase = createServerComponentClient({ cookies });
+  const cookieData = { cookies };
+  const supabase = createServerComponentClient(cookieData);
   const session = await getUser(supabase);
   console.log(session);
   if (session.data.session === null) {

@@ -9,7 +9,8 @@ import { getUser } from "../utils/supabase";
 import { data } from "autoprefixer";
 
 export async function createOrder(cart: CartData) {
-  const supabase = createServerComponentClient({ cookies });
+  const cookieData = { cookies };
+  const supabase = createServerComponentClient(cookieData);
   const user = await getUser(supabase);
   if (user.data.session === null) {
     return { error: "not-connected", success: false };

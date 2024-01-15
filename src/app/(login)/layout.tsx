@@ -9,7 +9,8 @@ export default async function layout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createServerComponentClient({ cookies });
+  const cookieData = { cookies };
+  const supabase = createServerComponentClient(cookieData);
   const session = await getUser(supabase);
   console.log(session);
   if (session.data.session !== null) {
