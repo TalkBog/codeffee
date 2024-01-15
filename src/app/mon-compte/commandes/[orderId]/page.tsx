@@ -2,23 +2,26 @@ import { OrderDetailsLayout } from "tp-kit/components";
 import { NextPageProps } from "../../../../types";
 import prisma from "../../../../utils/prisma";
 import { notFound } from "next/navigation";
+import RealTimeOrderDetail from "../../../../components/realtimeOrderDetail";
 
 type Props = {
   orderId: string;
-}
+};
 
-export default async function OrderDetailsPage({params}: NextPageProps<Props>) {
+export default async function OrderDetailsPage({
+  params,
+}: NextPageProps<Props>) {
   const orderId = parseInt(params.orderId);
   const order = await prisma.order.findUnique({
-    where: {id: orderId},
+    where: { id: orderId },
     include: {
       lines: {
-        include: { product: true }
-      }
-    }
+        include: { product: true },
+      },
+    },
   });
 
   if (!order) notFound();
 
-  return <OrderDetailsLayout order={order} />
+  return <RealTimeOrderDetail data={order} />;
 }
