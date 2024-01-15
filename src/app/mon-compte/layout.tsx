@@ -12,7 +12,6 @@ import { cookies } from "next/headers";
 import LogOutButton from "../../components/log-out-button";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const orders = await prisma.order.findMany();
   const supabase = createServerComponentClient({ cookies });
   const session = await getUser(supabase);
   console.log(session);
@@ -21,6 +20,11 @@ export default async function Layout({ children }: { children: ReactNode }) {
     redirect("/connexion");
   }
   const user = await supabase.auth.getUser();
+  const orders = await prisma.order.findMany({
+    where: {
+      userId: user.data.user?.id,
+    },
+  });
   return (
     <>
       {/* Orders list */}
