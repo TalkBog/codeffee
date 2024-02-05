@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server';
 
@@ -19,6 +20,9 @@ export async function POST(request : Request) {
           })
     }
 
+    console.log("rebuilding posts...")
+    revalidatePath('/[categorySlug]/[productSlug]')
+    
     const date = new Date()
 
 
